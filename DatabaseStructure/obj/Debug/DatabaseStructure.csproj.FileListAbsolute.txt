@@ -1,0 +1,12 @@
+C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\bin\Debug\DatabaseStructure.dll
+C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\bin\Debug\DatabaseStructure.pdb
+C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\obj\Debug\DatabaseStructure.csprojAssemblyReference.cache
+C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\obj\Debug\DatabaseStructure.csproj.CoreCompileInputs.cache
+C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\obj\Debug\DatabaseStructure.dll
+C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\obj\Debug\DatabaseStructure.pdb
+C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\bin\Debug\DatabaseStructure.dll.config
+C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\bin\Debug\EntityFramework.dll
+C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\bin\Debug\EntityFramework.xml
+C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\obj\Debug\DatabaseStructure.csproj.CopyComplete
