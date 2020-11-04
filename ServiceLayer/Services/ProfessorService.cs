@@ -20,15 +20,15 @@ namespace ServiceLayer.Services
 
         public void AddCourse(int professorId, int courseId)
         {
-            var professor = context.Professors.FirstOrDefault(p => p.PersonId == professorId);
-            var course = context.Courses.FirstOrDefault(c => c.CourseId == courseId);
+            var professor = context.Professors.FirstOrDefault(p => p.ProfessorId == professorId);
+            var course = context.Courses.FirstOrDefault(c => c.UniqueCode == courseId);
             professor.ProfessorCourses.Add(course);
             context.SaveChanges();
         }
 
         public IQueryable<Course> ShowProfessorCourses(int professorId)
         {
-            return context.Courses.Where(c => c.CourseId == professorId);
+            return context.Courses.Where(c => c.UniqueCode == professorId);
         }
     }
 }

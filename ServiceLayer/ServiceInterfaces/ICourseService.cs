@@ -12,7 +12,6 @@ namespace ServiceLayer.ServiceInterfaces
         void AddStudent(int studentId, int courseId);
 
         void AddProfessor(int professorId, int courseId);
-
-        Professor ShowProfessorInfo(int courseId);
+        
     }
 }

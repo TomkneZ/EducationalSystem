@@ -9,9 +9,9 @@ namespace ServiceLayer.ServiceInterfaces
 {
     public interface ISchoolService
     {
-        IQueryable<Student> ShowStudents(int schoolId);
+        ICollection<Student> GetStudents(int schoolId);
 
-        IQueryable<Professor> ShowProfessors(int schoolId);
+        ICollection<Professor> GetProfessors(int schoolId);
 
         void AddStudent(int studentId, int schoolId);
 

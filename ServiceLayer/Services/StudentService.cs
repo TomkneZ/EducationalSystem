@@ -3,6 +3,7 @@ using DatabaseStructure.Models;
 using ServiceLayer.ServiceInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,17 +19,18 @@ namespace ServiceLayer.Services
             this.context = context;
         }
 
-        public void AddCourse(int studentId, int courseId)
+        void IStudentService.AddCourse(int studentId, int courseId)
         {
-            var student = context.Students.FirstOrDefault(s => s.PersonId == studentId);
-            var course = context.Courses.FirstOrDefault(c => c.CourseId == courseId);
+            var student = context.Students.FirstOrDefault(s => s.StudentId == studentId);
+            var course = context.Courses.FirstOrDefault(c => c.UniqueCode == courseId);
             student.StudentCourses.Add(course);
             context.SaveChanges();
         }
 
-        public IQueryable<Course> ShowStudentCourses(int studentId)
+        Collection<Course> IStudentService.GetStudentCourses(int studentId)
         {
-            return context.Courses.Where(c => c.CourseId == studentId);
+            var student = context.Students.FirstOrDefault(c => c.StudentId == studentId);
+            return student.StudentCourses;
         }
     }
 }

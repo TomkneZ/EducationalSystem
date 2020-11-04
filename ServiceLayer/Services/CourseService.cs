@@ -19,21 +19,18 @@ namespace ServiceLayer.Services
         }
         public void AddProfessor(int professorId, int courseId)
         {
-            var course = context.Courses.FirstOrDefault(c => c.CourseId == courseId);
-            var professor = context.Professors.FirstOrDefault(p => p.PersonId == professorId);
+            var course = context.Courses.FirstOrDefault(c => c.UniqueCode == courseId);
+            var professor = context.Professors.FirstOrDefault(p => p.ProfessorId == professorId);
             course.CourseProfessor = professor;
             context.SaveChanges();
         }
 
         public void AddStudent(int studentId, int courseId)
         {
-
-        }
-
-        public Professor ShowProfessorInfo(int courseId)
-        {
-            var course = context.Courses.FirstOrDefault(c => c.CourseId == courseId);
-            return course.CourseProfessor;
+            var course = context.Courses.FirstOrDefault(c => c.UniqueCode == courseId);
+            var student = context.Students.FirstOrDefault(s => s.StudentId == studentId);
+            course.CourseStudents.Add(student);
+            context.SaveChanges();
         }
 
     }

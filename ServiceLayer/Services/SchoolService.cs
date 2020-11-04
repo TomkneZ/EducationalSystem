@@ -21,7 +21,7 @@ namespace ServiceLayer.Services
         public void AddProfessor(int professorId, int schoolId)
         {
             var school = context.Schools.FirstOrDefault(s => s.SchoolId == schoolId);
-            var professor = context.Professors.FirstOrDefault(p => p.PersonId == professorId);
+            var professor = context.Professors.FirstOrDefault(p => p.ProfessorId == professorId);
             school.SchoolProfessors.Add(professor);
             context.SaveChanges();
         }
@@ -29,20 +29,21 @@ namespace ServiceLayer.Services
         public void AddStudent(int studentId, int schoolId)
         {
             var school = context.Schools.FirstOrDefault(s => s.SchoolId == schoolId);
-            var student = context.Students.FirstOrDefault(s => s.PersonId == studentId);
+            var student = context.Students.FirstOrDefault(s => s.StudentId == studentId);
             school.SchoolStudents.Add(student);
             context.SaveChanges();
         }
 
-        public IQueryable<Professor> ShowProfessors(int schoolId)
+        public ICollection<Professor> GetProfessors(int schoolId)
         {
-
-            return context.Professors.Where(p => p.ProfessorSchool.SchoolId == schoolId);
+            var school = context.Schools.FirstOrDefault(s => s.SchoolId == schoolId);
+            return school.SchoolProfessors;
         }
 
-        public IQueryable<Student> ShowStudents(int schoolId)
+        public ICollection<Student> GetStudents(int schoolId)
         {
-            return context.Students.Where(s => s.StudentSchool.SchoolId == schoolId);
+            var school = context.Schools.FirstOrDefault(s => s.SchoolId == schoolId);
+            return school.SchoolStudents;
         }
     }
 }
