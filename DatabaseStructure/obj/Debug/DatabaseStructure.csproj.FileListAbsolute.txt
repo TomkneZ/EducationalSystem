@@ -9,3 +9,4 @@ C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\bin\Debug\E
 C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\bin\Debug\EntityFramework.xml
 C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\bin\Debug\EntityFramework.SqlServer.xml
 C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\obj\Debug\DatabaseStructure.csproj.CopyComplete
+C:\Users\zaben\Desktop\TechTasks\EducationalSystem\DatabaseStructure\obj\Debug\DatabaseStructure.csprojAssemblyReference.cache

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DatabaseStructure.AbstractModels;
 
 namespace DatabaseStructure.Models
 {
-    public class Professor
+    public class Professor : Person
     {
         public virtual School ProfessorSchool { get; set; }
 
