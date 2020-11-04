@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.AccessControl;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DatabaseStructure
+namespace DatabaseStructure.Models
 {
     public class School
     {

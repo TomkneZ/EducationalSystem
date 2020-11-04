@@ -1,13 +1,15 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DatabaseStructure
+namespace DatabaseStructure.AbstractModels
 {
-    public class Professor
+    public abstract class Person
     {
-        public int ProfessorId { get; set; }
+        public int PersonId { get; set; }
 
         public string FirstName { get; set; }
 
@@ -21,10 +23,5 @@ namespace DatabaseStructure
         public DateTime RegistrationDate { get; set; }
 
         public bool IsAccountActive { get; set; }
-
-        public virtual School ProfessorSchool { get; set; }
-
-        public virtual ICollection<Course> ProfessorCourses { get; set; }
-
     }
 }
