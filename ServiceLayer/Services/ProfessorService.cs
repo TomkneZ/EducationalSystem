@@ -26,6 +26,20 @@ namespace ServiceLayer.Services
             context.SaveChanges();
         }
 
+        public void AddProfessorInDb(string firstname, string lastname, string email, string phone, bool isActive)
+        {
+            var professor = new Professor()
+            {
+                FirstName = firstname,
+                LastName = lastname,
+                Email = email,
+                Phone = phone,
+                IsAccountActive = isActive
+            };
+            context.Professors.Add(professor);
+            context.SaveChanges();
+        }
+
         public IQueryable<Course> ShowProfessorCourses(int professorId)
         {
             return context.Courses.Where(c => c.UniqueCode == professorId);

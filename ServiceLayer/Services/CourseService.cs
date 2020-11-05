@@ -17,6 +17,19 @@ namespace ServiceLayer.Services
         {
             this.context = context;
         }
+
+        public void AddCourseInDb(string name, int uniquecode, bool isActive)
+        {
+            var course = new Course()
+            {
+                Name = name,
+                UniqueCode = uniquecode,
+                IsActive = isActive
+            };
+            context.Courses.Add(course);
+            context.SaveChanges();
+        }
+
         public void AddProfessor(int professorId, int courseId)
         {
             var course = context.Courses.FirstOrDefault(c => c.UniqueCode == courseId);

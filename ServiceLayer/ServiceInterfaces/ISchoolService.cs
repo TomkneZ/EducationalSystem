@@ -17,5 +17,7 @@ namespace ServiceLayer.ServiceInterfaces
 
         void AddProfessor(int professorId, int schoolId);
 
+        void AddSchoolInDb(string name);
+
     }
 }

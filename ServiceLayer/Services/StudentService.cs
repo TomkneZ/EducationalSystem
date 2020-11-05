@@ -19,6 +19,21 @@ namespace ServiceLayer.Services
             this.context = context;
         }
 
+        public void AddStudentInDb(string firstname, string lastname, string email, string phone, bool isActive)
+        {
+            var student = new Student()
+            {
+                FirstName = firstname,
+                LastName = lastname,
+                Email = email,
+                Phone = phone,
+                IsAccountActive = isActive
+            };
+            context.Students.Add(student);
+            context.SaveChanges();
+
+        }
+
         void IStudentService.AddCourse(int studentId, int courseId)
         {
             var student = context.Students.FirstOrDefault(s => s.StudentId == studentId);

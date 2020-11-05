@@ -12,5 +12,8 @@ namespace ServiceLayer.ServiceInterfaces
         IQueryable<Course> ShowProfessorCourses(int professorId);
 
         void AddCourse(int professorId, int courseId);
+
+        void AddProfessorInDb(string firstname, string lastname, string email, string phone, bool isActive);
+       
     }
 }

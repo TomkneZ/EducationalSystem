@@ -26,6 +26,16 @@ namespace ServiceLayer.Services
             context.SaveChanges();
         }
 
+        public void AddSchoolInDb(string name)
+        {
+            var school = new School()
+            {
+                Name = name
+            };
+            context.Schools.Add(school);
+            context.SaveChanges();
+        }
+
         public void AddStudent(int studentId, int schoolId)
         {
             var school = context.Schools.FirstOrDefault(s => s.SchoolId == schoolId);
