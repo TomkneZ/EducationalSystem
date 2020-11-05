@@ -10,6 +10,8 @@ namespace DatabaseStructure.Models
 {
     public class Student : Person
     {
+        public int StudentId { get; set; }
+
         public virtual School StudentSchool { get; set; }
 
         public virtual Collection<Course> StudentCourses { get; set; }

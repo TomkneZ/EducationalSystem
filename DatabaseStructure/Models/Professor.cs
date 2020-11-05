@@ -9,6 +9,8 @@ namespace DatabaseStructure.Models
 {
     public class Professor : Person
     {
+        public int ProfessorId { get; set; }
+
         public virtual School ProfessorSchool { get; set; }
 
         public virtual ICollection<Course> ProfessorCourses { get; set; }
