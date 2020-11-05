@@ -9,15 +9,14 @@ namespace ServiceLayer.ServiceInterfaces
 {
     public interface ISchoolService
     {
-        ICollection<Student> GetStudents(int schoolId);
+        List<Student> GetStudents(int schoolId);
 
-        ICollection<Professor> GetProfessors(int schoolId);
+        List<Professor> GetProfessors(int schoolId);
 
         void AddStudent(int studentId, int schoolId);
 
         void AddProfessor(int professorId, int schoolId);
 
-        void AddSchoolInDb(string name);
-
+        void AddSchool(string name);
     }
 }

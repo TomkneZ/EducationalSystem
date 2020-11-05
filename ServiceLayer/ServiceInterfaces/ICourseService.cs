@@ -13,6 +13,6 @@ namespace ServiceLayer.ServiceInterfaces
 
         void AddProfessor(int professorId, int courseId);
 
-        void AddCourseInDb(string name, int uniquecode, bool isActive);
+        void AddCourse(string name, int uniqueCode, bool isActive);
     }
 }

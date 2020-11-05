@@ -26,23 +26,30 @@ namespace ServiceLayer.Services
             context.SaveChanges();
         }
 
-        public void AddProfessorInDb(string firstname, string lastname, string email, string phone, bool isActive)
+        public void AddProfessor(string firstName, string lastName, string email, string phone, bool isActive)
         {
-            var professor = new Professor()
+            if (context.Professors.FirstOrDefault(p => p.Email == email) == null)
             {
-                FirstName = firstname,
-                LastName = lastname,
-                Email = email,
-                Phone = phone,
-                IsAccountActive = isActive
-            };
-            context.Professors.Add(professor);
-            context.SaveChanges();
+                var professor = new Professor()
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    Email = email,
+                    Phone = phone,
+                    IsAccountActive = isActive
+                };
+                context.Professors.Add(professor);
+                context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("This professor already in Database!");
+            }               
         }
 
-        public IQueryable<Course> ShowProfessorCourses(int professorId)
+        public List<Course> GetProfessorCourses(int professorId)
         {
-            return context.Courses.Where(c => c.UniqueCode == professorId);
+            return context.Courses.Where(c => c.UniqueCode == professorId).ToList();
         }
     }
 }

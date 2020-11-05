@@ -18,16 +18,30 @@ namespace ServiceLayer.Services
             this.context = context;
         }
 
-        public void AddCourseInDb(string name, int uniquecode, bool isActive)
+        public void AddCourse(string name, int uniqueCode, bool isActive)
         {
-            var course = new Course()
+            if (context.Courses.FirstOrDefault(c => c.UniqueCode == uniqueCode) != null)
             {
-                Name = name,
-                UniqueCode = uniquecode,
-                IsActive = isActive
-            };
-            context.Courses.Add(course);
-            context.SaveChanges();
+                throw new Exception("Another course has this unique code!");               
+            }
+            else
+            {
+                if (context.Courses.FirstOrDefault(c => c.Name == name) == null)
+                {
+                    var course = new Course()
+                    {
+                        Name = name,
+                        UniqueCode = uniqueCode,
+                        IsActive = isActive
+                    };
+                    context.Courses.Add(course);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("This course exists!");
+                }
+            }
         }
 
         public void AddProfessor(int professorId, int courseId)
@@ -45,6 +59,5 @@ namespace ServiceLayer.Services
             course.CourseStudents.Add(student);
             context.SaveChanges();
         }
-
     }
 }

@@ -2,6 +2,7 @@
 using DatabaseStructure.Models;
 using ServiceLayer.ServiceInterfaces;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,14 +27,21 @@ namespace ServiceLayer.Services
             context.SaveChanges();
         }
 
-        public void AddSchoolInDb(string name)
+        public void AddSchool(string name)
         {
-            var school = new School()
+            if (context.Schools.FirstOrDefault(s => s.Name == name) == null)
             {
-                Name = name
-            };
-            context.Schools.Add(school);
-            context.SaveChanges();
+                var school = new School()
+                {
+                    Name = name
+                };
+                context.Schools.Add(school);
+                context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("This school already exists!");
+            }               
         }
 
         public void AddStudent(int studentId, int schoolId)
@@ -44,17 +52,16 @@ namespace ServiceLayer.Services
             context.SaveChanges();
         }
 
-        public ICollection<Professor> GetProfessors(int schoolId)
+        public List<Professor> GetProfessors(int schoolId)
         {
             var school = context.Schools.FirstOrDefault(s => s.SchoolId == schoolId);
-            return school.SchoolProfessors;
+            return school.SchoolProfessors.ToList();
         }
 
-        public ICollection<Student> GetStudents(int schoolId)
+        public List<Student> GetStudents(int schoolId)
         {
             var school = context.Schools.FirstOrDefault(s => s.SchoolId == schoolId);
-            return school.SchoolStudents;
+            return school.SchoolStudents.ToList();
         }
     }
 }
-

@@ -9,11 +9,10 @@ namespace ServiceLayer.ServiceInterfaces
 {
     public interface IProfessorService
     {
-        IQueryable<Course> ShowProfessorCourses(int professorId);
+        List<Course> GetProfessorCourses(int professorId);
 
         void AddCourse(int professorId, int courseId);
 
-        void AddProfessorInDb(string firstname, string lastname, string email, string phone, bool isActive);
-       
+        void AddProfessor(string firstName, string lastName, string email, string phone, bool isActive);
     }
 }

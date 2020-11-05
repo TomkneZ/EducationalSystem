@@ -19,19 +19,25 @@ namespace ServiceLayer.Services
             this.context = context;
         }
 
-        public void AddStudentInDb(string firstname, string lastname, string email, string phone, bool isActive)
+        public void AddStudent(string firstName, string lastName, string email, string phone, bool isActive)
         {
-            var student = new Student()
+            if (context.Students.FirstOrDefault(s => s.Email == email) == null)
             {
-                FirstName = firstname,
-                LastName = lastname,
-                Email = email,
-                Phone = phone,
-                IsAccountActive = isActive
-            };
-            context.Students.Add(student);
-            context.SaveChanges();
-
+                var student = new Student()
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    Email = email,
+                    Phone = phone,
+                    IsAccountActive = isActive
+                };
+                context.Students.Add(student);
+                context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("This student already exists!");
+            }
         }
 
         void IStudentService.AddCourse(int studentId, int courseId)
@@ -42,10 +48,10 @@ namespace ServiceLayer.Services
             context.SaveChanges();
         }
 
-        Collection<Course> IStudentService.GetStudentCourses(int studentId)
+        List<Course> IStudentService.GetStudentCourses(int studentId)
         {
             var student = context.Students.FirstOrDefault(c => c.StudentId == studentId);
-            return student.StudentCourses;
+            return student.StudentCourses.ToList();
         }
     }
 }
