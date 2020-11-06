@@ -17,7 +17,7 @@ namespace EducationalSystem.DatabaseFillIn
                 dataManager = new DataManager(context);
                 try
                 {
-                    dataManager.CoursesService.AddCourse("OAiP", 444, true);
+                    dataManager.CoursesService.AddCourse("Fundamentals of Computer Technics", 4, true);
                     dataManager.ProfessorsService.AddProfessor("Dmitry", "Surkov", "d.surkov@mail.ru", "+3752936787096", true);
                     dataManager.StudentsService.AddStudent("Anna", "Safronova", "saffr@mail.ru", "+375293294601", true);
                     dataManager.SchoolsService.AddSchool("School n4");
