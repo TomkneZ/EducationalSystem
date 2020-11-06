@@ -17,10 +17,10 @@ namespace EducationalSystem.DatabaseFillIn
                 dataManager = new DataManager(context);
                 try
                 {
-                    dataManager.CoursesService.AddCourse("OOOP", 123, true);
-                    dataManager.ProfessorsService.AddProfessor("Lia", "Silver", "liasilver@mail.ru", "+375292477096", true);
-                    dataManager.StudentsService.AddStudent("Lina", "Rusinovich", "lina.rusinovichr@mail.ru", "+375293245096", true);
-                    dataManager.SchoolsService.AddSchool("School n5");
+                    dataManager.CoursesService.AddCourse("Digital marketing", 456, true);
+                    dataManager.ProfessorsService.AddProfessor("Dmitry", "Surkov", "d.surkov@mail.ru", "+3752936787096", true);
+                    dataManager.StudentsService.AddStudent("Anna", "Safronova", "saffr@mail.ru", "+375293294601", true);
+                    dataManager.SchoolsService.AddSchool("School n4");
                 }
                 catch (Exception ex)
                 {
