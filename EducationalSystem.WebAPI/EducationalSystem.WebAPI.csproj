@@ -17,7 +17,6 @@
     <Reference Include="ServiceLayer">
       <HintPath>..\ServiceLayer\bin\Debug\ServiceLayer.dll</HintPath>
     </Reference>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

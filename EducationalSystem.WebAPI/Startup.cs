@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using DatabaseStructure.Models;
+using DatabaseStructure;
 
 namespace EducationalSystem.WebAPI
 {

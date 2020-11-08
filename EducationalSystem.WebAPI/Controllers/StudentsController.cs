@@ -6,6 +6,9 @@ using AutoMapper;
 using EducationalSystem.WebAPI.ViewModels;
 using System.Net.Http;
 using System.Net;
+using System.Threading.Tasks;
+using DatabaseStructure;
+using System;
 
 namespace EducationalSystem.WebAPI.Controllers
 {
@@ -14,26 +17,35 @@ namespace EducationalSystem.WebAPI.Controllers
     public class StudentsController : ControllerBase
     {
         DBContext db;
+        DataManager dataManager;
         public StudentsController(DBContext context)
         {
             db = context;
+            dataManager = new DataManager(db);
         }
 
         [HttpGet]
-        public HttpResponseMessage Get()
+        public ActionResult<IEnumerable<Student>> Get()
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, ActivePersonViewModel>()
-                    .ForMember("Name", opt => opt.MapFrom(src => src.FirstName + " " + src.LastName)));
+               .ForMember("Name", opt => opt.MapFrom(src => src.FirstName + " " + src.LastName)));
             var mapper = new Mapper(config);
-            var students = mapper.Map<IEnumerable<Student>, List<ActivePersonViewModel>>(db.Students.Where(s => s.IsAccountActive == true));
-            var response = Request.CreateResponse<IEnumerable<Student>>(HttpStatusCode.OK, db.Students);
-            return response;
+            var students = mapper.Map<IEnumerable<Student>, List<ActivePersonViewModel>>(dataManager.StudentsService.GetActiveStudents());
+            return Ok(students);
+        }
+
+        [HttpPost]
+        public ActionResult<IEnumerable<Student>> Post(int studentId, int courseId)
+        {
+            var student = db.Students.FirstOrDefault(s => s.StudentId == studentId);
+            return Ok(student);
         }
 
         [HttpGet("{id}")]
         public ContentResult Get(int SchoolId)
-        {           
+        {
             return Content("ZZZZ");
         }
+
     }
 }
