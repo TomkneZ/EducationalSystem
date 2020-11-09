@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DatabaseStructure.Models;
+﻿using DatabaseStructure.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DatabaseStructure
 {
     public class DBContext : DbContext
     {
-        public DBContext() : base("DbConnectionString")
-        {
-
-        }
-
-        public DbSet<Student> Students { get; set; }
+        public DbSet<SchoolType> SchoolTypes { get; set; }
 
         public DbSet<Course> Courses { get; set; }
 
@@ -23,8 +13,12 @@ namespace DatabaseStructure
 
         public DbSet<School> Schools { get; set; }
 
-        public DbSet<SchoolType> SchoolTypes { get; set; }
+        public DbSet<Student> Students { get; set; }
 
-
+        public DBContext(DbContextOptions<DBContext> options)
+            : base(options)
+        {
+            Database.EnsureCreated();
+        }
     }
 }

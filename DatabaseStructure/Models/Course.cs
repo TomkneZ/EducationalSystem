@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +10,7 @@ namespace DatabaseStructure.Models
 {
     public class Course
     {
-        public int CourseId { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; }
 
@@ -16,8 +18,15 @@ namespace DatabaseStructure.Models
 
         public bool IsActive { get; set; }
 
-        public virtual Professor CourseProfessor { get; set; }
+        public int? ProfessorId { get; set; }
 
-        public virtual ICollection<Student> CourseStudents { get; set; }
+        public virtual Professor Professor { get; set; }
+
+        public virtual ICollection<Student> Students { get; set; }
+
+        public Course()
+        {
+            Students = new List<Student>();
+        }            
     }
 }
