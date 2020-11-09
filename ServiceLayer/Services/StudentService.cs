@@ -21,7 +21,8 @@ namespace ServiceLayer.Services
 
         public void AddStudent(string firstName, string lastName, string email, string phone, bool isActive)
         {
-            if (context.Students.FirstOrDefault(s => s.Email == email) == null)
+            var IsStudentExists = context.Students.Any(s => s.Email == email);
+            if (IsStudentExists)
             {
                 var student = new Student()
                 {
@@ -40,18 +41,9 @@ namespace ServiceLayer.Services
             }
         }
 
-        void IStudentService.AddCourse(int studentId, int courseId)
+        public List<Student> GetActiveStudents()
         {
-            var student = context.Students.FirstOrDefault(s => s.StudentId == studentId);
-            var course = context.Courses.FirstOrDefault(c => c.UniqueCode == courseId);
-            student.StudentCourses.Add(course);
-            context.SaveChanges();
-        }
-
-        List<Course> IStudentService.GetStudentCourses(int studentId)
-        {
-            var student = context.Students.FirstOrDefault(c => c.StudentId == studentId);
-            return student.StudentCourses.ToList();
+            return context.Students.Where(s => s.IsAccountActive).ToList();
         }
     }
 }

@@ -3,6 +3,7 @@ using DatabaseStructure.Models;
 using ServiceLayer.ServiceInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,17 +19,10 @@ namespace ServiceLayer.Services
             this.context = context;
         }
 
-        public void AddCourse(int professorId, int courseId)
-        {
-            var professor = context.Professors.FirstOrDefault(p => p.ProfessorId == professorId);
-            var course = context.Courses.FirstOrDefault(c => c.UniqueCode == courseId);
-            professor.ProfessorCourses.Add(course);
-            context.SaveChanges();
-        }
-
         public void AddProfessor(string firstName, string lastName, string email, string phone, bool isActive)
         {
-            if (context.Professors.FirstOrDefault(p => p.Email == email) == null)
+            var IsProfessorExists = context.Professors.Any(p => p.Email == email);
+            if (IsProfessorExists)
             {
                 var professor = new Professor()
                 {
@@ -44,12 +38,23 @@ namespace ServiceLayer.Services
             else
             {
                 throw new Exception("This professor already in Database!");
-            }               
+            }
         }
 
-        public List<Course> GetProfessorCourses(int professorId)
+        public void EditProfessor(Professor professor)
         {
-            return context.Courses.Where(c => c.UniqueCode == professorId).ToList();
+            context.Update(professor);
+            context.SaveChanges();
+        }
+
+        public List<Course> GetActiveCourses(int professorId)
+        {
+            return context.Courses.Where(c => (c.ProfessorId == professorId ) && (c.IsActive)).ToList();
+        }
+
+        public List<Professor> GetActiveProfessors()
+        {
+            return context.Professors.Where(p => p.IsAccountActive).ToList();
         }
     }
 }

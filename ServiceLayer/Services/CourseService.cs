@@ -20,44 +20,47 @@ namespace ServiceLayer.Services
 
         public void AddCourse(string name, int uniqueCode, bool isActive)
         {
-            if (context.Courses.FirstOrDefault(c => c.UniqueCode == uniqueCode) != null)
+            var IsCourseExists = context.Courses.Any(c => c.Name == name);
+            if (IsCourseExists)
             {
-                throw new Exception("Another course has this unique code!");               
+                var course = new Course()
+                {
+                    Name = name,
+                    UniqueCode = uniqueCode,
+                    IsActive = isActive
+                };
+                context.Courses.Add(course);
+                context.SaveChanges();
             }
             else
             {
-                if (context.Courses.FirstOrDefault(c => c.Name == name) == null)
-                {
-                    var course = new Course()
-                    {
-                        Name = name,
-                        UniqueCode = uniqueCode,
-                        IsActive = isActive
-                    };
-                    context.Courses.Add(course);
-                    context.SaveChanges();
-                }
-                else
-                {
-                    throw new Exception("This course exists!");
-                }
+                throw new Exception("This course exists!");
             }
         }
 
-        public void AddProfessor(int professorId, int courseId)
+        public void AddStudent(Course course, Student student)
         {
-            var course = context.Courses.FirstOrDefault(c => c.UniqueCode == courseId);
-            var professor = context.Professors.FirstOrDefault(p => p.ProfessorId == professorId);
-            course.CourseProfessor = professor;
+            course.Students.Add(student);
             context.SaveChanges();
         }
 
-        public void AddStudent(int studentId, int courseId)
+        public void DeleteStudent(Course course, Student student)
         {
-            var course = context.Courses.FirstOrDefault(c => c.UniqueCode == courseId);
-            var student = context.Students.FirstOrDefault(s => s.StudentId == studentId);
-            course.CourseStudents.Add(student);
+            course.Students.Remove(student);
             context.SaveChanges();
+        }
+
+        public bool IsCodeUnique(int uniqueCode)
+        {
+            var courses = context.Courses.Where(c => c.UniqueCode == uniqueCode).ToList();
+            if (courses.Count > 1)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

@@ -9,10 +9,12 @@ namespace ServiceLayer.ServiceInterfaces
 {
     public interface ICourseService
     {
-        void AddStudent(int studentId, int courseId);
-
-        void AddProfessor(int professorId, int courseId);
-
         void AddCourse(string name, int uniqueCode, bool isActive);
+
+        bool IsCodeUnique(int uniqueCode);
+
+        void AddStudent(Course course, Student student);
+
+        void DeleteStudent(Course course, Student student);
     }
 }
