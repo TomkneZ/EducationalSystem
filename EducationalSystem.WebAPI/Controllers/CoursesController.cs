@@ -17,20 +17,36 @@ namespace EducationalSystem.WebAPI.Controllers
     {
         DBContext db;
         DataManager dataManager;
+
         public CoursesController(DBContext context)
         {
             db = context;
-            dataManager = new DataManager(db);
+            dataManager = new DataManager(db);            
         }
 
-        [HttpPost]
-        public ActionResult<Course> Post()
+        [HttpGet]
+        public ActionResult<IEnumerable<Course>> Get()
         {
-            dataManager.CoursesService.AddCourse("Programming languages", 101, true);
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Course, CreateCourseViewModel>());             
-            var mapper = new Mapper(config);
-            var course = mapper.Map<Course, CreateCourseViewModel>(db.Courses.FirstOrDefault(c => c.UniqueCode == 101));
-            return Ok(course);
-        }       
+            var course = db.Courses.FirstOrDefault(c => c.Id == 1);
+            var student = db.Students.FirstOrDefault(c => c.Id == 2);
+            student.Courses.Add(course);
+            db.SaveChanges();   
+            return Ok(student);
+        }
+
+        [HttpGet("{courseId}")]
+        public ContentResult IsCourseCodeUnique(int courseId)
+        {
+            var course = db.Courses.FirstOrDefault(c => c.Id == courseId);
+            var IsCourseCodeUnique = dataManager.CoursesService.IsCodeUnique(course.UniqueCode);
+            if (IsCourseCodeUnique)
+            {
+                return Content("Unique");
+            }
+            else
+            {
+                return Content("Not Unique");
+            }
+        }
     }
 }
