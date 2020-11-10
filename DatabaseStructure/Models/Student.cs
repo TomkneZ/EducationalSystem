@@ -14,12 +14,12 @@ namespace DatabaseStructure.Models
         public int? SchoolId { get; set; }
 
         public virtual School School { get; set; }
-
-        public virtual ICollection<Course> Courses { get; set; }
+        
+        public List<StudentCourse> StudentCourses { get; set; }
 
         public Student()
         {
-            Courses = new List<Course>();
+            StudentCourses = new List<StudentCourse>();
         }
     }
 }

@@ -19,14 +19,14 @@ namespace DatabaseStructure.Models
         public bool IsActive { get; set; }
 
         public int? ProfessorId { get; set; }
-
+        
         public virtual Professor Professor { get; set; }
-
-        public virtual ICollection<Student> Students { get; set; }
+        
+        public List<StudentCourse> StudentCourses { get; set; }
 
         public Course()
         {
-            Students = new List<Student>();
+            StudentCourses = new List<StudentCourse>();
         }            
     }
 }
