@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using AutoMapper;
 using DatabaseStructure;
@@ -22,15 +23,35 @@ namespace EducationalSystem.WebAPI.Controllers
         {
             db = context;
             dataManager = new DataManager(db);            
+        }        
+
+        [HttpPost("{studentId}")]
+        public ActionResult<Student> Post(int studentId)
+        {
+            var student = db.Students.FirstOrDefault(s => s.Id == studentId);
+            var course = db.Courses.FirstOrDefault(c => c.Id == 4);
+            if (student == null)
+            {
+                return NotFound("student wasn't found!");
+            }
+            dataManager.CoursesService.AddStudent(course, student);
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, PersonViewModel>()
+            .ForMember("Name", opt => opt.MapFrom(src => src.FirstName + " " + src.LastName)));
+            var mapper = new Mapper(config);
+            var studentViewModel = mapper.Map<Student,PersonViewModel>(student);
+            return Ok(studentViewModel);
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<Course>> Get()
+        [HttpDelete("{courseId}")]
+        public ActionResult<Student> Delete(int courseId)
         {
-            var course = db.Courses.FirstOrDefault(c => c.Id == 1);
-            var student = db.Students.FirstOrDefault(c => c.Id == 2);
-            student.Courses.Add(course);
-            db.SaveChanges();   
+            var student = db.Students.FirstOrDefault(s => s.Id == 2);
+            var course = db.Courses.FirstOrDefault(c => c.Id == courseId);
+            if (course == null && student == null)
+            {
+                return NotFound("Student/Course wasn't found");
+            }           
+            dataManager.CoursesService.DeleteStudent(course, student);        
             return Ok(student);
         }
 
