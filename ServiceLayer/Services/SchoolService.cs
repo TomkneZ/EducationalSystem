@@ -22,7 +22,7 @@ namespace ServiceLayer.Services
         public void AddSchool(string name)
         {
             var IsSchoolExists = context.Schools.Any(s => s.Name == name);
-            if (IsSchoolExists)
+            if (!IsSchoolExists)
             {
                 var school = new School()
                 {

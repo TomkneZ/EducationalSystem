@@ -11,7 +11,7 @@ namespace ServiceLayer.ServiceInterfaces
 {
     public interface IStudentService
     {
-        void AddStudent(string firstName, string lastName, string email, string phone, bool isActive);
+        Student AddStudent(string firstName, string lastName, string email, string phone, bool isActive);
 
         List<Student> GetActiveStudents();
     }

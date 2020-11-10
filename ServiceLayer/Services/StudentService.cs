@@ -19,10 +19,10 @@ namespace ServiceLayer.Services
             this.context = context;
         }
 
-        public void AddStudent(string firstName, string lastName, string email, string phone, bool isActive)
+        public Student AddStudent(string firstName, string lastName, string email, string phone, bool isActive)
         {
             var IsStudentExists = context.Students.Any(s => s.Email == email);
-            if (IsStudentExists)
+            if (!IsStudentExists)
             {
                 var student = new Student()
                 {
@@ -34,6 +34,7 @@ namespace ServiceLayer.Services
                 };
                 context.Students.Add(student);
                 context.SaveChanges();
+                return student;
             }
             else
             {

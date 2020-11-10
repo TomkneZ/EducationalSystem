@@ -22,7 +22,7 @@ namespace ServiceLayer.Services
         public void AddProfessor(string firstName, string lastName, string email, string phone, bool isActive)
         {
             var IsProfessorExists = context.Professors.Any(p => p.Email == email);
-            if (IsProfessorExists)
+            if (!IsProfessorExists)
             {
                 var professor = new Professor()
                 {

@@ -21,7 +21,7 @@ namespace ServiceLayer.Services
         public void AddCourse(string name, int uniqueCode, bool isActive)
         {
             var IsCourseExists = context.Courses.Any(c => c.Name == name);
-            if (IsCourseExists)
+            if (!IsCourseExists)
             {
                 var course = new Course()
                 {
@@ -40,13 +40,14 @@ namespace ServiceLayer.Services
 
         public void AddStudent(Course course, Student student)
         {
-            course.Students.Add(student);
+            student.StudentCourses.Add(new StudentCourse { CourseId = course.Id , StudentId = student.Id });
             context.SaveChanges();
         }
 
         public void DeleteStudent(Course course, Student student)
         {
-            course.Students.Remove(student);
+            var studentCourse = student.StudentCourses.FirstOrDefault(sc => sc.CourseId == course.Id);
+            student.StudentCourses.Remove(studentCourse);
             context.SaveChanges();
         }
 
