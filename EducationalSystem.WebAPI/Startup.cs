@@ -12,7 +12,7 @@ namespace EducationalSystem.WebAPI
         {
             string con = "Server=(local);Database=EducationalSystem;Trusted_Connection=True;";
             // устанавливаем контекст данных
-            services.AddDbContext<DBContext>(options => options.UseSqlServer(con));
+            services.AddDbContext<DBContext>(options => options.UseSqlServer(con));            
 
             services.AddControllers(); // используем контроллеры без представлений
         }

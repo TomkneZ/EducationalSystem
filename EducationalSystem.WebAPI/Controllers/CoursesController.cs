@@ -23,16 +23,33 @@ namespace EducationalSystem.WebAPI.Controllers
         {
             db = context;
             dataManager = new DataManager(db);            
-        }        
+        }
 
-        [HttpPost("{studentId}")]
-        public ActionResult<Student> Post(int studentId)
+        [HttpPost("{action}")]
+        public ActionResult<School> AddCourse([FromBody]Course course)
+        {            
+            if (course == null)
+            {
+                return NotFound();
+            }            
+            db.Courses.Add(course);            
+            var professor = db.Professors.FirstOrDefault(p => p.Id == course.ProfessorId);           
+            course.Professor = professor;            
+            db.SaveChanges();
+            var school = db.Schools.FirstOrDefault(s => s.Id == professor.SchoolId);
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Course, CreateCourseViewModel>());           
+            var mapper = new Mapper(config);
+            var courseViewModel = mapper.Map<Course, CreateCourseViewModel>(course);
+            return Ok();
+        }
+
+        [HttpPost("{action}/{studentId}")]
+        public ActionResult<Student> AddStudentToCourse([FromBody]Course course, int studentId)
         {
             var student = db.Students.FirstOrDefault(s => s.Id == studentId);
-            var course = db.Courses.FirstOrDefault(c => c.Id == 4);
-            if (student == null)
+            if (student == null && course == null)
             {
-                return NotFound("student wasn't found!");
+                return NotFound();
             }
             dataManager.CoursesService.AddStudent(course, student);
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, PersonViewModel>()
@@ -42,20 +59,19 @@ namespace EducationalSystem.WebAPI.Controllers
             return Ok(studentViewModel);
         }
 
-        [HttpDelete("{courseId}")]
-        public ActionResult<Student> Delete(int courseId)
+        [HttpDelete("{action}/{studentId}")]
+        public ActionResult<Student> DeleteStudentFromCourse([FromBody]Course course, int studentId)
         {
-            var student = db.Students.FirstOrDefault(s => s.Id == 2);
-            var course = db.Courses.FirstOrDefault(c => c.Id == courseId);
+            var student = db.Students.FirstOrDefault(s => s.Id == studentId);        
             if (course == null && student == null)
             {
-                return NotFound("Student/Course wasn't found");
+                return NotFound();
             }           
             dataManager.CoursesService.DeleteStudent(course, student);        
-            return Ok(student);
+            return Ok();
         }
 
-        [HttpGet("{courseId}")]
+        [HttpGet("{action}/{courseId}")]
         public ContentResult IsCourseCodeUnique(int courseId)
         {
             var course = db.Courses.FirstOrDefault(c => c.Id == courseId);

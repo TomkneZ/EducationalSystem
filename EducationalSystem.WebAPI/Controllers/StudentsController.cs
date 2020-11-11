@@ -14,8 +14,8 @@ using System.Net.Mail;
 
 namespace EducationalSystem.WebAPI.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]    
     public class StudentsController : ControllerBase
     {
         DBContext db;
@@ -26,9 +26,9 @@ namespace EducationalSystem.WebAPI.Controllers
             db = context;
             dataManager = new DataManager(db);
         }
-
-        [HttpGet]
-        public ActionResult<IEnumerable<Student>> GetActiveStudent()
+        
+        [HttpGet("{action}")]
+        public ActionResult<IEnumerable<Student>> GetActiveStudents()
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, ActivePersonViewModel>()
                .ForMember("Name", opt => opt.MapFrom(src => src.FirstName + " " + src.LastName))
@@ -38,7 +38,7 @@ namespace EducationalSystem.WebAPI.Controllers
             return Ok(students);
         }
 
-        [HttpGet("{schoolId}")]
+        [HttpGet("{action}/{schoolId}")]
         public ActionResult<Student> GetSchoolActiveStudents(int schoolId)
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, PersonViewModel>()
@@ -46,6 +46,35 @@ namespace EducationalSystem.WebAPI.Controllers
             var mapper = new Mapper(config);
             var students = mapper.Map<IEnumerable<Student>, List<PersonViewModel>>(dataManager.SchoolsService.GetActiveStudents(schoolId));
             return Ok(students);
+        }
+
+        [HttpGet("{action}/{studentId}")]
+        public ActionResult<Student> ActivateStudent(int studentId)
+        {
+            var student = db.Students.FirstOrDefault(s => s.Id == studentId);
+            student.IsAccountActive = true;
+            db.SaveChanges();
+            return Ok(student);
+        }
+
+        [HttpPost("{action}")]
+        public ActionResult<Student> AddStudent([FromBody]Student student)
+        {
+            if (student == null)
+            {
+                return NotFound();
+            }
+            db.Students.Add(student);
+            db.SaveChanges();
+            SmtpClient smtpClient = new SmtpClient("localhost", 25);
+            MailAddress from = new MailAddress("support@educationalsystem.com", "Educational System");
+            MailAddress to = new MailAddress(student.Email);
+            MailMessage m = new MailMessage(from, to);
+            m.Subject = "Activate your account";
+            m.IsBodyHtml = true;
+            m.Body = $"<p>Hi, dear student {student.FirstName} {student.LastName}</p> <a href='https://localhost:44370/api/Students/ActivateStudent/{student.Id}'>Activate</a>";
+            smtpClient.Send(m);
+            return Ok("Message to activate account was sent");           
         }
     }
 }

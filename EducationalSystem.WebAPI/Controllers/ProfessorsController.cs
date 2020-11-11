@@ -24,7 +24,7 @@ namespace EducationalSystem.WebAPI.Controllers
             dataManager = new DataManager(db);            
         }
 
-        [HttpGet]
+        [HttpGet("{action}")]
         public ActionResult<IEnumerable<Professor>> GetActiveProfessors()
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Professor, ActivePersonViewModel>()
@@ -35,16 +35,13 @@ namespace EducationalSystem.WebAPI.Controllers
             return Ok(professors);
         }
 
-        [HttpPut]
-        public ActionResult<Professor> EditProfessor(int professorId)
-        {
-            var professor = db.Professors.FirstOrDefault(p => p.Id == professorId);
+        [HttpPut("{action}")]
+        public ActionResult<Professor> EditProfessor([FromBody]Professor professor)
+        {          
             if (professor == null)
             {
                 return NotFound();
-            }
-            professor.FirstName = "Edited";
-            professor.LastName = "Professor";
+            }            
             dataManager.ProfessorsService.EditProfessor(professor);
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Professor, PersonViewModel>()
              .ForMember("Name", opt => opt.MapFrom(src => src.FirstName + " " + src.LastName)));             
@@ -53,7 +50,7 @@ namespace EducationalSystem.WebAPI.Controllers
             return Ok(professorViewModel);
         }
 
-        [HttpGet("{professorId}")]
+        [HttpGet("{action}/{professorId}")]
         public ActionResult<Course> GetProfessorActiveCourses(int professorId)
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Course, ActiveProfessorCoursesViewModel>());             
