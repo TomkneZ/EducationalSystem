@@ -26,7 +26,7 @@ namespace EducationalSystem.WebAPI.Controllers
         }
 
         [HttpPost("{action}")]
-        public ActionResult<School> AddCourse([FromBody]Course course)
+        public ActionResult<Course> AddCourse([FromBody]Course course)
         {            
             if (course == null)
             {
@@ -37,10 +37,12 @@ namespace EducationalSystem.WebAPI.Controllers
             course.Professor = professor;            
             db.SaveChanges();
             var school = db.Schools.FirstOrDefault(s => s.Id == professor.SchoolId);
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Course, CreateCourseViewModel>());           
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Course, CreateCourseViewModel>()
+            .ForMember("ProfessorName", opt => opt.MapFrom(src => professor.FirstName +" " + professor.LastName))
+            .ForMember("SchoolName", opt => opt.MapFrom(src => school.Name)));           
             var mapper = new Mapper(config);
             var courseViewModel = mapper.Map<Course, CreateCourseViewModel>(course);
-            return Ok();
+            return Ok(courseViewModel);
         }
 
         [HttpPost("{action}/{studentId}")]
