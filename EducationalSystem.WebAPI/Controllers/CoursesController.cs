@@ -18,74 +18,59 @@ namespace EducationalSystem.WebAPI.Controllers
     {
         DBContext db;
         DataManager dataManager;
+        private readonly IMapper _mapper;
 
-        public CoursesController(DBContext context)
+        public CoursesController(DBContext context, IMapper mapper)
         {
             db = context;
-            dataManager = new DataManager(db);            
+            dataManager = new DataManager(db);
+            _mapper = mapper;
         }
 
         [HttpPost("{action}")]
         public ActionResult<Course> AddCourse([FromBody]Course course)
-        {            
+        {
             if (course == null)
             {
                 return NotFound();
-            }            
-            db.Courses.Add(course);            
-            var professor = db.Professors.FirstOrDefault(p => p.Id == course.ProfessorId);           
-            course.Professor = professor;            
+            }
+            db.Courses.Add(course);
+            var professor = db.Professors.FirstOrDefault(p => p.Id == course.ProfessorId);
+            course.Professor = professor;
             db.SaveChanges();
             var school = db.Schools.FirstOrDefault(s => s.Id == professor.SchoolId);
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Course, CreateCourseViewModel>()
-            .ForMember("ProfessorName", opt => opt.MapFrom(src => professor.FirstName +" " + professor.LastName))
-            .ForMember("SchoolName", opt => opt.MapFrom(src => school.Name)));           
-            var mapper = new Mapper(config);
-            var courseViewModel = mapper.Map<Course, CreateCourseViewModel>(course);
-            return Ok(courseViewModel);
+            return Ok(_mapper.Map<Course, CreateCourseViewModel>(course));
         }
 
-        [HttpPost("{action}/{studentId}")]
-        public ActionResult<Student> AddStudentToCourse([FromBody]Course course, int studentId)
+        [HttpPost("{action}/{studentId}/{courseId}")]
+        public ActionResult<Student> AddStudentToCourse(int studentId, int courseId)
         {
             var student = db.Students.FirstOrDefault(s => s.Id == studentId);
+            var course = db.Courses.FirstOrDefault(c => c.Id == courseId);
             if (student == null && course == null)
             {
                 return NotFound();
             }
             dataManager.CoursesService.AddStudent(course, student);
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, PersonViewModel>()
-            .ForMember("Name", opt => opt.MapFrom(src => src.FirstName + " " + src.LastName)));
-            var mapper = new Mapper(config);
-            var studentViewModel = mapper.Map<Student,PersonViewModel>(student);
-            return Ok(studentViewModel);
+            return Ok(_mapper.Map<Student, PersonViewModel>(student));
         }
 
         [HttpDelete("{action}/{studentId}")]
         public ActionResult<Student> DeleteStudentFromCourse([FromBody]Course course, int studentId)
         {
-            var student = db.Students.FirstOrDefault(s => s.Id == studentId);        
+            var student = db.Students.FirstOrDefault(s => s.Id == studentId);
             if (course == null && student == null)
             {
                 return NotFound();
-            }           
-            dataManager.CoursesService.DeleteStudent(course, student);        
+            }
+            dataManager.CoursesService.DeleteStudent(course, student);
             return Ok();
         }
 
-        [HttpGet("{action}/{courseId}")]
-        public ContentResult IsCourseCodeUnique(int courseId)
+        [HttpGet("{action}/{code}")]
+        public bool IsCourseCodeUnique(int code)
         {
-            var course = db.Courses.FirstOrDefault(c => c.Id == courseId);
-            var IsCourseCodeUnique = dataManager.CoursesService.IsCodeUnique(course.UniqueCode);
-            if (IsCourseCodeUnique)
-            {
-                return Content("Unique");
-            }
-            else
-            {
-                return Content("Not Unique");
-            }
+            return dataManager.CoursesService.IsCodeUnique(code);
         }
     }
 }

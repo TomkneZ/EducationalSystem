@@ -15,36 +15,31 @@ using System.Net.Mail;
 namespace EducationalSystem.WebAPI.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]    
+    [ApiController]
     public class StudentsController : ControllerBase
     {
         DBContext db;
         DataManager dataManager;
+        private readonly IMapper _mapper;
 
-        public StudentsController(DBContext context)
+        public StudentsController(DBContext context, IMapper mapper)
         {
             db = context;
             dataManager = new DataManager(db);
+            _mapper = mapper;
         }
-        
+
         [HttpGet("{action}")]
         public ActionResult<IEnumerable<Student>> GetActiveStudents()
-        {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, ActivePersonViewModel>()
-               .ForMember("Name", opt => opt.MapFrom(src => src.FirstName + " " + src.LastName))
-               .ForMember("SchoolName", opt => opt.MapFrom(src => db.Schools.FirstOrDefault(s => s.Id == src.SchoolId).Name)));
-            var mapper = new Mapper(config);
-            var students = mapper.Map<IEnumerable<Student>, List<ActivePersonViewModel>>(dataManager.StudentsService.GetActiveStudents());
+        {            
+            var students = _mapper.Map<IEnumerable<Student>, List<ActivePersonViewModel>>(dataManager.StudentsService.GetActiveStudents());
             return Ok(students);
         }
 
         [HttpGet("{action}/{schoolId}")]
         public ActionResult<Student> GetSchoolActiveStudents(int schoolId)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, PersonViewModel>()
-              .ForMember("Name", opt => opt.MapFrom(src => src.FirstName + " " + src.LastName)));
-            var mapper = new Mapper(config);
-            var students = mapper.Map<IEnumerable<Student>, List<PersonViewModel>>(dataManager.SchoolsService.GetActiveStudents(schoolId));
+            var students = _mapper.Map<IEnumerable<Student>, List<PersonViewModel>>(dataManager.SchoolsService.GetActiveStudents(schoolId));
             return Ok(students);
         }
 
@@ -66,15 +61,20 @@ namespace EducationalSystem.WebAPI.Controllers
             }
             db.Students.Add(student);
             db.SaveChanges();
-            SmtpClient smtpClient = new SmtpClient("localhost", 25);
+            SendActivationMessage(student.FirstName, student.LastName, student.Email, student.Id);
+            return Ok("Message to activate account was sent");
+        }
+
+        private void SendActivationMessage(string firstName, string lastName, string email, int studentId)
+        {
+            SmtpClient smtpClient = new SmtpClient(Config.SmtpHost, Config.SmtpPort);
             MailAddress from = new MailAddress("support@educationalsystem.com", "Educational System");
-            MailAddress to = new MailAddress(student.Email);
+            MailAddress to = new MailAddress(email);
             MailMessage m = new MailMessage(from, to);
             m.Subject = "Activate your account";
             m.IsBodyHtml = true;
-            m.Body = $"<p>Hi, dear student {student.FirstName} {student.LastName}</p> <a href='https://localhost:44370/api/Students/ActivateStudent/{student.Id}'>Activate</a>";
+            m.Body = $"<p>Hi, dear student {firstName} {lastName}</p> <a href='https://localhost:44370/api/Students/ActivateStudent/{studentId}'>Activate</a>";
             smtpClient.Send(m);
-            return Ok("Message to activate account was sent");           
         }
     }
 }
