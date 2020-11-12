@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using AutoMapper;
 using EducationalSystem.WebAPI.Profiles;
+using ServiceLayer.ServiceInterfaces;
+using ServiceLayer.Services;
 
 namespace EducationalSystem.WebAPI
 {
@@ -34,6 +36,11 @@ namespace EducationalSystem.WebAPI
 
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
+
+            services.AddTransient<ICourseService, CourseService>();
+            services.AddTransient<IProfessorService, ProfessorService>();
+            services.AddTransient<ISchoolService, SchoolService>();
+            services.AddTransient<IStudentService, StudentService>();
         }
 
         public void Configure(IApplicationBuilder app)

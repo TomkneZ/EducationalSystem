@@ -8,6 +8,7 @@ using DatabaseStructure.Models;
 using EducationalSystem.WebAPI.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ServiceLayer.ServiceInterfaces;
 
 namespace EducationalSystem.WebAPI.Controllers
 {
@@ -15,21 +16,21 @@ namespace EducationalSystem.WebAPI.Controllers
     [ApiController]
     public class ProfessorsController : ControllerBase
     {
-        DBContext db;
-        DataManager dataManager;
+        private readonly DBContext db;        
         private readonly IMapper _mapper;
+        private readonly IProfessorService _professorService;
 
-        public ProfessorsController(DBContext context, IMapper mapper)
+        public ProfessorsController(DBContext context, IMapper mapper, IProfessorService professorService)
         {
-            db = context;
-            dataManager = new DataManager(db);
+            db = context;            
             _mapper = mapper;
+            _professorService = professorService;
         }
 
         [HttpGet("{action}")]
         public ActionResult<IEnumerable<Professor>> GetActiveProfessors()
         {
-            var professors = _mapper.Map<IEnumerable<Professor>, List<ActivePersonViewModel>>(dataManager.ProfessorsService.GetActiveProfessors());
+            var professors = _mapper.Map<IEnumerable<Professor>, List<ActivePersonViewModel>>(_professorService.GetActiveProfessors());
             return Ok(professors);
         }
 
@@ -40,14 +41,14 @@ namespace EducationalSystem.WebAPI.Controllers
             {
                 return NotFound();
             }
-            dataManager.ProfessorsService.EditProfessor(professor);
+            _professorService.EditProfessor(professor);
             return Ok(_mapper.Map<Professor, PersonViewModel>(professor));
         }
 
         [HttpGet("{action}/{professorId}")]
         public ActionResult<Course> GetProfessorActiveCourses(int professorId)
         {
-            var courses = _mapper.Map<IEnumerable<Course>, List<ActiveProfessorCoursesViewModel>>(dataManager.ProfessorsService.GetActiveCourses(professorId));
+            var courses = _mapper.Map<IEnumerable<Course>, List<ActiveProfessorCoursesViewModel>>(_professorService.GetActiveCourses(professorId));
             return Ok(courses);
         }
     }

@@ -9,6 +9,7 @@ using DatabaseStructure.Models;
 using EducationalSystem.WebAPI.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ServiceLayer.ServiceInterfaces;
 
 namespace EducationalSystem.WebAPI.Controllers
 {
@@ -16,15 +17,15 @@ namespace EducationalSystem.WebAPI.Controllers
     [ApiController]
     public class CoursesController : ControllerBase
     {
-        DBContext db;
-        DataManager dataManager;
+        private readonly DBContext db;        
         private readonly IMapper _mapper;
+        private readonly ICourseService _courseService;
 
-        public CoursesController(DBContext context, IMapper mapper)
+        public CoursesController(DBContext context, IMapper mapper, ICourseService courseService)
         {
-            db = context;
-            dataManager = new DataManager(db);
+            db = context;            
             _mapper = mapper;
+            _courseService = courseService;
         }
 
         [HttpPost("{action}")]
@@ -51,7 +52,7 @@ namespace EducationalSystem.WebAPI.Controllers
             {
                 return NotFound();
             }
-            dataManager.CoursesService.AddStudent(course, student);
+            _courseService.AddStudent(course, student);
             return Ok(_mapper.Map<Student, PersonViewModel>(student));
         }
 
@@ -63,14 +64,14 @@ namespace EducationalSystem.WebAPI.Controllers
             {
                 return NotFound();
             }
-            dataManager.CoursesService.DeleteStudent(course, student);
+            _courseService.DeleteStudent(course, student);
             return Ok();
         }
 
         [HttpGet("{action}/{code}")]
         public bool IsCourseCodeUnique(int code)
         {
-            return dataManager.CoursesService.IsCodeUnique(code);
+            return _courseService.IsCodeUnique(code);
         }
     }
 }

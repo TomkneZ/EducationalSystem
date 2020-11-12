@@ -11,6 +11,7 @@ using DatabaseStructure;
 using System;
 using Microsoft.AspNetCore.Routing.Constraints;
 using System.Net.Mail;
+using ServiceLayer.ServiceInterfaces;
 
 namespace EducationalSystem.WebAPI.Controllers
 {
@@ -18,28 +19,30 @@ namespace EducationalSystem.WebAPI.Controllers
     [ApiController]
     public class StudentsController : ControllerBase
     {
-        DBContext db;
-        DataManager dataManager;
+        private readonly DBContext db;        
+        private readonly IStudentService _studentService;
+        private readonly ISchoolService _schoolService;
         private readonly IMapper _mapper;
 
-        public StudentsController(DBContext context, IMapper mapper)
+        public StudentsController(DBContext context, IMapper mapper, IStudentService studentService, ISchoolService schoolService)
         {
-            db = context;
-            dataManager = new DataManager(db);
+            db = context;            
             _mapper = mapper;
+            _studentService = studentService;
+            _schoolService = schoolService;
         }
 
         [HttpGet("{action}")]
         public ActionResult<IEnumerable<Student>> GetActiveStudents()
         {            
-            var students = _mapper.Map<IEnumerable<Student>, List<ActivePersonViewModel>>(dataManager.StudentsService.GetActiveStudents());
+            var students = _mapper.Map<IEnumerable<Student>, List<ActivePersonViewModel>>(_studentService.GetActiveStudents());
             return Ok(students);
         }
 
         [HttpGet("{action}/{schoolId}")]
         public ActionResult<Student> GetSchoolActiveStudents(int schoolId)
         {
-            var students = _mapper.Map<IEnumerable<Student>, List<PersonViewModel>>(dataManager.SchoolsService.GetActiveStudents(schoolId));
+            var students = _mapper.Map<IEnumerable<Student>, List<PersonViewModel>>(_schoolService.GetActiveStudents(schoolId));
             return Ok(students);
         }
 
