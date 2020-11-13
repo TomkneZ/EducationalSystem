@@ -30,7 +30,11 @@ namespace EducationalSystem.WebAPI.Controllers
         [HttpGet("{action}")]
         public ActionResult<IEnumerable<Professor>> GetActiveProfessors()
         {
-            var professors = _mapper.Map<IEnumerable<Professor>, List<ActivePersonViewModel>>(_professorService.GetActiveProfessors());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Professor, ActivePersonViewModel>()
+                .ForMember("Name", opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
+                .ForMember("SchoolName", opt => opt.MapFrom(src => db.Schools.FirstOrDefault(s => s.Id == src.SchoolId).Name)));            
+            var mapper = new Mapper(config);
+            var professors = mapper.Map<IEnumerable<Professor>, List<ActivePersonViewModel>>(_professorService.GetActiveProfessors());
             return Ok(professors);
         }
 

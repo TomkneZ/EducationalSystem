@@ -20,7 +20,7 @@ namespace EducationalSystem.WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             Configuration.Bind("Project", new Config());
-            string con = "Server=(local);Database=EducationalSystem;Trusted_Connection=True;";
+            const string con = "Server=(local);Database=EducationalSystem;Trusted_Connection=True;";
             // устанавливаем контекст данных
             services.AddDbContext<DBContext>(options => options.UseSqlServer(con));
 

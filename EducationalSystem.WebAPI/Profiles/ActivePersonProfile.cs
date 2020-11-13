@@ -11,7 +11,8 @@ using System.Threading.Tasks;
 namespace EducationalSystem.WebAPI.Profiles
 {
     public class ActivePersonProfile : Profile
-    {    
+    {
+        DBContext db;
         public ActivePersonProfile()
         {
             CreateMap<Student, ActivePersonViewModel>()

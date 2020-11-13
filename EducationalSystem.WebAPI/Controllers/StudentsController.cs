@@ -30,7 +30,7 @@ namespace EducationalSystem.WebAPI.Controllers
             _mapper = mapper;
             _studentService = studentService;
             _schoolService = schoolService;
-        }
+        }    
 
         [HttpGet("{action}")]
         public ActionResult<IEnumerable<Student>> GetActiveStudents()
