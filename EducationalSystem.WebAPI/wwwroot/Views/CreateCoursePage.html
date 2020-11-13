@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <h2>Create new course</h2>
+    <form name="courseForm">
+        <input type="hidden" name="id" value="0" />
+        <div class="form-group col-md-5">
+            <label for="name">Name:</label>
+            <input class="form-control" name="name" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="age">Unique code:</label>
+            <input class="form-control" name="code" type="number" />
+        </div>
+        <div class="panel-body">
+            <button type="submit" id="submit" class="btn btn-primary">Save</button>            
+        </div>
+    </form>
+    <script>
+        async function CreateCourse(courseName, courseCode) {   
+            alert("in function");
+            const response = await fetch("api/Courses/AddCourse", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    Name: courseName,
+                    UniqueCode: courseCode,
+                    IsActive: true
+                })
+            });
+             if (response.ok === true) {
+                 alert("course added");
+             }
+        }        
+        document.forms["courseForm"].addEventListener("submit", e => {
+            e.preventDefault();            
+            const form = document.forms["courseForm"];            
+            const name = form.elements["name"].value;
+            const code = form.elements["code"].value;                   
+            CreateCourse(name, code);           
+        });
+    </script>
+</body>
+</html>

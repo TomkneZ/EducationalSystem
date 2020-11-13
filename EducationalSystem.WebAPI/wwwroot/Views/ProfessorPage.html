@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Professor Page</title>
+    <!-- подключаем файлы Bootstrap -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Educational System</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/index.html">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Professors<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="Views/ActiveStudentsPage.html">Students</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="Views/CreateCoursePage.html">Courses</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+    <form name="professorsForm">
+        <div class="form-row">
+            <div class="form-group col-md-1">
+                <label></label>
+            </div>
+            <div class="form-group col-md-10">
+                <select name="professors" class="form-control" id="exampleFormControlSelect1">
+                </select>
+            </div>
+            <div class="form-group col-md-1">
+                <label></label>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <div id="professorName"></div>
+            </div>
+            <div class="form-group col-md-3">
+                <div id="professorEmail"></div>
+            </div>
+            <div class="form-group col-md-3">
+                <div id="professorPhone"></div>
+            </div>
+            <div class="form-group col-md-3">
+                <a hrer="ProfessorPage.html" class="badge badge-light" id="professorSchool"></a>
+            </div>
+        </div>
+    </form>
+    <a class="btn btn-primary" href="CreateCoursePage.html" role="button">Add course</a>
+    <script>
+        var professorsSelect = professorsForm.professors;
+        var professors;
+        async function GetProfessors() {
+            const response = await fetch("/api/Professors/GetActiveProfessors", {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                professors = await response.json();
+                /*
+                alert(professors[1]['name']);*/
+                for (let i = 0; i < professors.length; i++) {
+                    var newOption = new Option(professors[i]['name'], i);
+                    professorsSelect.options[professorsSelect.options.length] = newOption;
+                }
+            }
+        }
+        GetProfessors();
+        professorsSelect.onchange = function () {
+            professorName.textContent = professors[this.value]['name'];
+            professorEmail.textContent = professors[this.value]['email'];
+            professorPhone.textContent = professors[this.value]['phone'];
+            professorSchool.textContent = professors[this.value]['schoolName'];
+        }
+    </script>
+</body>
+</html>
