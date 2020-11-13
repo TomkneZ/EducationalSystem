@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <!-- Bootstrap CSS-->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -15,7 +16,6 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
@@ -76,21 +76,19 @@
             });
             if (response.ok === true) {
                 professors = await response.json();
-                /*
-                alert(professors[1]['name']);*/
                 for (let i = 0; i < professors.length; i++) {
-                    var newOption = new Option(professors[i]['name'], i);
-                    professorsSelect.options[professorsSelect.options.length] = newOption;
+                    $('select[name=professors]').append(new Option(professors[i]['name'], i))
                 }
             }
         }
         GetProfessors();
-        professorsSelect.onchange = function () {
-            professorName.textContent = professors[this.value]['name'];
-            professorEmail.textContent = professors[this.value]['email'];
-            professorPhone.textContent = professors[this.value]['phone'];
-            professorSchool.textContent = professors[this.value]['schoolName'];
-        }
+        $("select[name=professors]").change(function () {
+            const i = $('select[name=professors]').val();
+            $('#professorName').text(professors[i]['name']);
+            $('#professorEmail').text(professors[i]['email']);
+            $('#professorPhone').text(professors[i]['phone']);
+            $('#professorSchool').text(professors[i]['schoolName']);
+        });
     </script>
 </body>
 </html>
